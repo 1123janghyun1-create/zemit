@@ -1,0 +1,32 @@
+{
+  "builders": [
+    {
+      "id": "b1b8571a-4858-4d23-b835-d187d664bfd1",
+      "name": "장현",
+      "handle": "1123janghyun4",
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocKJQwrEG05G53-K6xtmvTC790HoDfyz_-F0VeJZSVYAtAFgFw=s96-c",
+      "bio": "lumio 메이커",
+      "role": "Maker",
+      "isStartingMember": true,
+      "socials": {},
+      "followersCount": 1,
+      "isFollowing": true
+    },
+    {
+      "id": "08f75bdf-ba36-4ce2-a78d-ac289cb1d5c3",
+      "name": "장현",
+      "handle": "1123janghyun1",
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLn7c9VgWMq0KF-OGNWtGVwHKhKzUCDj9H87D4tAcncEaPrlt4=s96-c",
+      "bio": "lumio 메이커",
+      "role": "Maker",
+      "isStartingMember": true,
+      "socials": {},
+      "followersCount": 0
+    }
+  ],
+  "projects": [],
+  "communityPosts": [],
+  "feedbacks": [],
+  "comments": [],
+  "timeline": []
+}

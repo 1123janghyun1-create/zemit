@@ -1,0 +1,256 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  
+  --radius-card: var(--radius-card);
+  --radius-control: var(--radius-control);
+  --radius-full: var(--radius-full);
+}
+
+:root {
+  --font-sans: "Pretendard Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  
+  --background: #f8f9fa;
+  --foreground: #09090b;
+  --surface: #ffffff;
+  --surface-muted: #f1f3f5;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-foreground: #ffffff;
+  --primary-soft: #eff6ff;
+  
+  --success: #16a34a;
+  --success-soft: #f0fdf4;
+  --warning: #ea580c;
+  --warning-soft: #fff7ed;
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+  
+  --muted: #4b5563;
+  --muted-foreground: #6b7280;
+  
+  --radius-card: 16px;
+  --radius-control: 12px;
+  --radius-full: 9999px;
+  
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-hover: 0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.04);
+  --shadow-popover: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+}
+
+.dark {
+  --background: #0a0a0b;
+  --foreground: #f5f5f6;
+  --surface: #131315;
+  --surface-muted: #19191c;
+  --border: #27272a;
+  --border-strong: #3f3f46;
+  
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --primary-foreground: #ffffff;
+  --primary-soft: #172554;
+  
+  --success: #4ade80;
+  --success-soft: #052e16;
+  --warning: #fb923c;
+  --warning-soft: #431407;
+  --danger: #f87171;
+  --danger-soft: #450a0a;
+  
+  --muted: #a1a1aa;
+  --muted-foreground: #71717a;
+  
+  --shadow-sm: 0 1px 2px #0000004d;
+  --shadow-card: 0 1px 3px #0006, 0 1px 2px #0000004d;
+  --shadow-hover: 0 8px 24px #00000080, 0 2px 6px #0000004d;
+  --shadow-popover: 0 12px 32px #0009;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+    box-sizing: border-box;
+  }
+  
+  html {
+    color-scheme: light;
+    font-family: var(--font-sans);
+  }
+  
+  html.dark {
+    color-scheme: dark;
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  ::selection {
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+}
+
+/* Custom Zemit Utilities */
+.bg-primary {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+.bg-primary * {
+  color: inherit;
+}
+
+.hover\:bg-primary-hover:hover,
+.bg-primary:hover {
+  background-color: var(--primary-hover) !important;
+}
+
+.text-primary {
+  color: var(--primary) !important;
+}
+
+.text-primary-foreground {
+  color: var(--primary-foreground) !important;
+}
+
+.border-primary {
+  border-color: var(--primary) !important;
+}
+
+.border-primary\/30 {
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.bg-primary-soft {
+  background-color: var(--primary-soft) !important;
+}
+
+.bg-surface {
+  background-color: var(--surface);
+}
+
+.bg-surface-muted {
+  background-color: var(--surface-muted);
+}
+
+.bg-success-soft {
+  background-color: var(--success-soft);
+}
+
+.bg-warning-soft {
+  background-color: var(--warning-soft);
+}
+
+.bg-danger-soft {
+  background-color: var(--danger-soft);
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.text-muted-foreground {
+  color: var(--muted-foreground);
+}
+
+.text-success {
+  color: var(--success);
+}
+
+.text-warning {
+  color: var(--warning);
+}
+
+.text-danger {
+  color: var(--danger);
+}
+
+.border-border {
+  border-color: var(--border);
+}
+
+.border-border-strong {
+  border-color: var(--border-strong);
+}
+
+.rounded-card {
+  border-radius: var(--radius-card);
+}
+
+.rounded-control {
+  border-radius: var(--radius-control);
+}
+
+.shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+.shadow-hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.shadow-popover {
+  box-shadow: var(--shadow-popover);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s cubic-bezier(0, 0, 0.2, 1) forwards;
+}
