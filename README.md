@@ -1,6 +1,6 @@
-# Lumio (루미오) — Meet users. Build together.
+# Zemix (제믹스) — Meet users. Build together.
 
-사이드 프로젝트 메이커 플랫폼 **Lumio**입니다.
+사이드 프로젝트 메이커 플랫폼 **Zemix**입니다.
 아이디어에서 런칭까지, 사이드 프로젝트를 공유하고 첫 사용자를 만나 피드백을 받으며 팀원을 찾을 수 있는 플랫폼입니다.
 
 ---

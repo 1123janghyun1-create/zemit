@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>zemix 공식 실제 시연 영상 (Live Demo)</title>
+  <link rel="icon" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0b0f19; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .theater-glow {
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 50px rgba(56, 189, 248, 0.25);
+    }
+    .active-chapter {
+      border-color: #38bdf8 !important;
+      background-color: rgba(56, 189, 248, 0.1) !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-10 flex flex-col items-center">
+
+  <div class="max-w-6xl w-full">
+
+    <!-- Top Navigation & Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
+          <span>🎬 Automated Live Screen Recording</span>
+          <span>•</span>
+          <span>30초 완성 시연영상</span>
+        </div>
+        <h1 class="text-2xl md:text-4xl font-extrabold text-white tracking-tight">
+          zemix 실제 서비스 시연 영상
+        </h1>
+        <p class="text-slate-400 text-xs md:text-sm mt-1">
+          로컬 사이트에 직접 접속하여 화면을 실시간 녹화하고, 마우스 동선, 클릭 효과, 한글 자막을 편집하여 제작한 완성본입니다.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a href="/shorts.html" class="px-3 py-2 rounded-xl border border-slate-700 hover:border-slate-500 text-slate-300 text-xs font-semibold transition-all">
+          📱 쇼츠(세로형) 영상 보기
+        </a>
+        <a href="/logos.html" class="px-3 py-2 rounded-xl border border-slate-700 hover:border-slate-500 text-slate-300 text-xs font-semibold transition-all">
+          💎 로고 키트
+        </a>
+        <a href="/" class="px-3 py-2 rounded-xl bg-sky-500/20 text-sky-400 hover:bg-sky-500/30 text-xs font-bold transition-all">
+          zemix 홈 →
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Video Section -->
+    <div class="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Video Player Column (8 cols) -->
+      <div class="lg:col-span-8 flex flex-col gap-4">
+        <div class="relative rounded-2xl overflow-hidden theater-glow border-2 border-slate-700 bg-black aspect-video">
+          <video id="demoVideo" class="w-full h-full object-cover" controls playsinline preload="auto">
+            <source src="/zemix_live_demo.mp4" type="video/mp4">
+            브라우저가 비디오 재생을 지원하지 않습니다.
+          </video>
+        </div>
+
+        <!-- Controls & Downloads -->
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-xl">
+          <div class="flex items-center gap-3">
+            <button id="ttsBtn" onclick="toggleVoiceNarration()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold rounded-lg text-xs flex items-center gap-2 transition-all">
+              <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+              <span>AI 음성 해설 켜고 재생</span>
+            </button>
+            <span class="text-xs text-slate-400" id="statusBadge">준비 완료 (30초)</span>
+          </div>
+
+          <a href="/zemix_live_demo.mp4" download="zemix_live_demo.mp4" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-white font-bold rounded-lg text-xs shadow-lg shadow-sky-500/20 transition-all flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            시연영상 다운로드 (.mp4)
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Chapters & Metadata (4 cols) -->
+      <div class="lg:col-span-4 flex flex-col gap-4">
+
+        <!-- Chapters List -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+          <h2 class="text-sm font-bold text-slate-200 mb-3 flex items-center gap-2">
+            <span class="text-sky-400">⏱️</span> 시연 챕터 바로가기
+          </h2>
+          <div class="space-y-2 text-xs">
+            <button onclick="seekTo(0)" class="chapter-btn w-full text-left p-2.5 rounded-lg border border-slate-800 hover:border-slate-700 bg-slate-950 flex items-center justify-between transition-all" data-time="0">
+              <span class="font-semibold text-slate-200">00:00 • 인트로</span>
+              <span class="text-slate-400 text-[11px]">3D 로고 & 타이틀</span>
+            </button>
+            <button onclick="seekTo(2.5)" class="chapter-btn w-full text-left p-2.5 rounded-lg border border-slate-800 hover:border-slate-700 bg-slate-950 flex items-center justify-between transition-all" data-time="2.5">
+              <span class="font-semibold text-slate-200">00:02 • 메인 홈 화면</span>
+              <span class="text-slate-400 text-[11px]">스크롤 & 프로젝트 그리드</span>
+            </button>
+            <button onclick="seekTo(8.0)" class="chapter-btn w-full text-left p-2.5 rounded-lg border border-slate-800 hover:border-slate-700 bg-slate-950 flex items-center justify-between transition-all" data-time="8.0">
+              <span class="font-semibold text-slate-200">00:08 • 프로젝트 상세 페이지</span>
+              <span class="text-slate-400 text-[11px]">데모 링크, 하트, 피드백</span>
+            </button>
+            <button onclick="seekTo(15.0)" class="chapter-btn w-full text-left p-2.5 rounded-lg border border-slate-800 hover:border-slate-700 bg-slate-950 flex items-center justify-between transition-all" data-time="15.0">
+              <span class="font-semibold text-slate-200">00:15 • 둘러보기(Explore)</span>
+              <span class="text-slate-400 text-[11px]">태그 필터 & 검색</span>
+            </button>
+            <button onclick="seekTo(21.0)" class="chapter-btn w-full text-left p-2.5 rounded-lg border border-slate-800 hover:border-slate-700 bg-slate-950 flex items-center justify-between transition-all" data-time="21.0">
+              <span class="font-semibold text-slate-200">00:21 • 빌더 프로필</span>
+              <span class="text-slate-400 text-[11px]">메이커 컬렉션 포트폴리오</span>
+            </button>
+            <button onclick="seekTo(26.5)" class="chapter-btn w-full text-left p-2.5 rounded-lg border border-slate-800 hover:border-slate-700 bg-slate-950 flex items-center justify-between transition-all" data-time="26.5">
+              <span class="font-semibold text-slate-200">00:26 • 아웃트로 CTA</span>
+              <span class="text-slate-400 text-[11px]">프로젝트 등록 안내</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Thumbnail Previews -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+          <h2 class="text-sm font-bold text-slate-200 mb-2 flex items-center gap-2">
+            <span class="text-amber-400">🖼️</span> 추출된 고화질 스크린샷 썸네일
+          </h2>
+          <div class="grid grid-cols-3 gap-2">
+            <a href="/demo-thumb-1.jpg" download="demo-thumb-1.jpg" class="rounded-lg overflow-hidden border border-slate-800 aspect-video block hover:border-sky-400 transition-all">
+              <img src="/demo-thumb-1.jpg" alt="썸네일 1" class="w-full h-full object-cover">
+            </a>
+            <a href="/demo-thumb-2.jpg" download="demo-thumb-2.jpg" class="rounded-lg overflow-hidden border border-slate-800 aspect-video block hover:border-sky-400 transition-all">
+              <img src="/demo-thumb-2.jpg" alt="썸네일 2" class="w-full h-full object-cover">
+            </a>
+            <a href="/demo-thumb-3.jpg" download="demo-thumb-3.jpg" class="rounded-lg overflow-hidden border border-slate-800 aspect-video block hover:border-sky-400 transition-all">
+              <img src="/demo-thumb-3.jpg" alt="썸네일 3" class="w-full h-full object-cover">
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const video = document.getElementById('demoVideo');
+    const chapterButtons = document.querySelectorAll('.chapter-btn');
+
+    function seekTo(seconds) {
+      video.currentTime = seconds;
+      video.play();
+    }
+
+    video.addEventListener('timeupdate', () => {
+      const cur = video.currentTime;
+      chapterButtons.forEach((btn, idx) => {
+        const t = parseFloat(btn.dataset.time);
+        const nextT = chapterButtons[idx + 1] ? parseFloat(chapterButtons[idx + 1].dataset.time) : 999;
+        if (cur >= t && cur < nextT) {
+          btn.classList.add('active-chapter');
+        } else {
+          btn.classList.remove('active-chapter');
+        }
+      });
+    });
+
+    function toggleVoiceNarration() {
+      video.currentTime = 0;
+      video.play();
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        
+        const cues = [
+          { text: "국내 인디 빌더들의 사이드 프로젝트 쇼케이스 플랫폼, 제믹스 시연을 시작합니다.", delay: 300 },
+          { text: "메인 화면에서 최신 프로젝트들을 스크롤하며 한눈에 둘러볼 수 있습니다.", delay: 2800 },
+          { text: "원하는 프로젝트를 클릭하면 상세 설명과 사용 기술 스택, 데모 사이트 방문과 실시간 응원을 남길 수 있습니다.", delay: 8200 },
+          { text: "둘러보기 메뉴에서 AI나 웹 등 관심 있는 카테고리 태그로 필터링할 수 있습니다.", delay: 15200 },
+          { text: "빌더 페이지에서는 개발자의 프로필과 포트폴리오를 확인할 수 있습니다.", delay: 21200 },
+          { text: "지금 제믹스에 여러분의 프로젝트를 무료로 등록하고 첫 사용자를 만나보세요!", delay: 26800 }
+        ];
+
+        cues.forEach(c => {
+          setTimeout(() => {
+            if (!video.paused) {
+              const utter = new SpeechSynthesisUtterance(c.text);
+              utter.lang = 'ko-KR';
+              utter.rate = 1.05;
+              window.speechSynthesis.speak(utter);
+            }
+          }, c.delay);
+        });
+      }
+    }
+  </script>
+</body>
+</html>

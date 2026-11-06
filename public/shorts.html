@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>zemix 쇼츠 비디오 스튜디오 & 다운로더</title>
+  <link rel="icon" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0b0f19; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .phone-frame {
+      width: 360px;
+      height: 640px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(56, 189, 248, 0.2);
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center">
+
+  <div class="max-w-5xl w-full">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-semibold mb-3">
+        <span>🎬 AI Shorts Studio</span>
+        <span>•</span>
+        <span>zemix 자동 완성 비디오</span>
+        <span>•</span>
+        <a href="/logos.html" class="underline hover:text-white transition-colors">💎 고화질 로고 키트 보기 →</a>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+        유튜브 쇼츠 & 인스타 릴스 영상이 완성되었습니다!
+      </h1>
+      <p class="text-slate-400 text-sm mt-2">
+        25초 9:16 세로형 홍보 영상입니다. 바로 미리보기 재생하고 다운로드하여 유튜브 쇼츠/릴스/틱톡에 업로드하세요.
+      </p>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+      
+      <!-- Video Player (Phone Frame) -->
+      <div class="md:col-span-5 flex flex-col items-center">
+        <div class="relative phone-frame rounded-[36px] overflow-hidden border-4 border-slate-700 bg-black flex items-center justify-center">
+          <video id="shortsVideo" class="w-full h-full object-cover" controls playsinline loop preload="auto">
+            <source src="/zemix_shorts.mp4" type="video/mp4">
+            브라우저가 비디오 재생을 지원하지 않습니다.
+          </video>
+        </div>
+
+        <div class="flex items-center gap-3 mt-4 w-full max-w-[360px]">
+          <a href="/zemix_shorts.mp4" download="zemix_shorts.mp4" class="flex-1 text-center py-3 px-4 bg-sky-500 hover:bg-sky-400 text-white font-bold rounded-xl shadow-lg shadow-sky-500/25 transition-all text-sm flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            비디오 다운로드 (.mp4)
+          </a>
+          <button id="ttsButton" onclick="playWithTTS()" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold rounded-xl text-sm flex items-center gap-1.5 transition-all">
+            <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+            AI 음성 읽기
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Column: Thumbnail, Copy text & Upload Guide -->
+      <div class="md:col-span-7 flex flex-col gap-6">
+
+        <!-- 1. Thumbnails Selection -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5">
+          <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2 mb-3">
+            <span class="text-amber-400">🖼️</span> 추천 썸네일 커버 (클릭 시 다운로드)
+          </h2>
+          <div class="grid grid-cols-3 gap-3">
+            <a href="/shorts-thumb-1.jpg" download="thumb-1.jpg" class="group relative rounded-xl overflow-hidden border border-slate-700 hover:border-sky-400 transition-all aspect-[9/16] bg-slate-800 block">
+              <img src="/shorts-thumb-1.jpg" alt="썸네일 1" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all flex items-end p-2">
+                <span class="text-[11px] font-bold text-white bg-black/60 px-2 py-0.5 rounded">1. 훅 (0명)</span>
+              </div>
+            </a>
+            <a href="/shorts-thumb-2.jpg" download="thumb-2.jpg" class="group relative rounded-xl overflow-hidden border border-slate-700 hover:border-sky-400 transition-all aspect-[9/16] bg-slate-800 block">
+              <img src="/shorts-thumb-2.jpg" alt="썸네일 2" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all flex items-end p-2">
+                <span class="text-[11px] font-bold text-white bg-black/60 px-2 py-0.5 rounded">2. 쇼케이스</span>
+              </div>
+            </a>
+            <a href="/shorts-thumb-3.jpg" download="thumb-3.jpg" class="group relative rounded-xl overflow-hidden border border-slate-700 hover:border-sky-400 transition-all aspect-[9/16] bg-slate-800 block">
+              <img src="/shorts-thumb-3.jpg" alt="썸네일 3" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all flex items-end p-2">
+                <span class="text-[11px] font-bold text-white bg-black/60 px-2 py-0.5 rounded">3. 등록 CTA</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- 2. Copy Template for Upload -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+              <span class="text-sky-400">📋</span> 업로드용 제목 및 설명문 (1클릭 복사)
+            </h2>
+            <button onclick="copyUploadText()" id="copyBtn" class="text-xs bg-slate-800 hover:bg-slate-700 text-sky-400 font-semibold px-2.5 py-1 rounded-lg border border-slate-700 transition-colors">
+              전체 복사
+            </button>
+          </div>
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 text-xs text-slate-300 font-mono leading-relaxed max-h-48 overflow-y-auto" id="uploadText">
+[영상 제목]
+사이드 프로젝트 열심히 만들었는데 방문자 수가 0명일 때? 😭 #shorts
+
+[영상 본문 & 고정 댓글]
+직접 만든 사이드 프로젝트, 웹앱, AI 툴을 세상에 알리고 싶다면?
+국내 빌더들을 위한 쇼케이스 플랫폼 [zemix]에 무료로 올려보세요! 🚀
+
+👉 zemix 바로가기: https://zemix.kr (본인 도메인)
+- 3분 만에 초간단 프로젝트 등록
+- 동료 개발자들의 솔직한 피드백 & 하트 응원
+- 구글 검색봇 자동 크롤링 & SEO 최적화
+
+#사이드프로젝트 #개발자 #웹개발 #인디해커 #1인개발 #코딩 #zemix #포트폴리오
+          </div>
+        </div>
+
+        <!-- 3. Upload Guide -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5">
+          <h2 class="text-sm font-bold text-slate-200 mb-3 flex items-center gap-2">
+            <span class="text-emerald-400">⚡</span> 유튜브 쇼츠 올리는 3단계
+          </h2>
+          <ol class="text-xs text-slate-300 space-y-2 list-decimal list-inside leading-relaxed">
+            <li><strong class="text-white">비디오 다운로드</strong> 버튼을 눌러 <code class="text-sky-400">zemix_shorts.mp4</code>를 저장합니다.</li>
+            <li>스마트폰 유튜브 앱에서 <strong class="text-white">[+] → [Shorts 동영상 만들기] → 갤러리에서 영상 선택</strong>을 누릅니다.</li>
+            <li>유튜브 앱 내에서 <strong class="text-white">[사운드 추가]</strong>를 눌러 요즘 유행하는 신나는 BGM(로파이나 팝 음악)을 살짝 깔고 업로드하면 끝!</li>
+          </ol>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function copyUploadText() {
+      const text = document.getElementById('uploadText').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.innerText = '복사 완료! ✅';
+        btn.classList.add('text-emerald-400');
+        setTimeout(() => {
+          btn.innerText = '전체 복사';
+          btn.classList.remove('text-emerald-400');
+        }, 2000);
+      });
+    }
+
+    function playWithTTS() {
+      const video = document.getElementById('shortsVideo');
+      video.currentTime = 0;
+      video.play();
+
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        
+        const scripts = [
+          { text: "사이드 프로젝트 열심히 만들었는데, 방문자 수가 0명이라고요? 어디에 홍보해야 할지 막막하셨죠?", delay: 300 },
+          { text: "그럴 땐 국내 빌더들의 프로젝트 쇼케이스, 제믹스에 올려보세요!", delay: 5200 },
+          { text: "3분 만에 무료로 등록하고, 동료 빌더들의 피드백과 구글 검색 노출까지!", delay: 12200 },
+          { text: "지금 고정 댓글 링크에서 여러분의 멋진 프로젝트를 자랑해 보세요!", delay: 19200 }
+        ];
+
+        scripts.forEach(s => {
+          setTimeout(() => {
+            if (!video.paused) {
+              const utter = new SpeechSynthesisUtterance(s.text);
+              utter.lang = 'ko-KR';
+              utter.rate = 1.05;
+              window.speechSynthesis.speak(utter);
+            }
+          }, s.delay);
+        });
+      }
+    }
+  </script>
+</body>
+</html>

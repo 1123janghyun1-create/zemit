@@ -146,23 +146,28 @@ ALTER TABLE public.feedbacks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.project_updates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.community_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.follows ENABLE ROW LEVEL SECURITY;
 
 -- Public read policies
 CREATE POLICY "Public read profiles" ON public.profiles FOR SELECT USING (true);
 CREATE POLICY "Public read projects" ON public.projects FOR SELECT USING (true);
+CREATE POLICY "Public read project likes" ON public.project_likes FOR SELECT USING (true);
 CREATE POLICY "Public read feedbacks" ON public.feedbacks FOR SELECT USING (true);
 CREATE POLICY "Public read comments" ON public.comments FOR SELECT USING (true);
 CREATE POLICY "Public read updates" ON public.project_updates FOR SELECT USING (true);
 CREATE POLICY "Public read community posts" ON public.community_posts FOR SELECT USING (true);
+CREATE POLICY "Public read follows" ON public.follows FOR SELECT USING (true);
 
 -- Authenticated write policies
 CREATE POLICY "Users can edit own profile" ON public.profiles FOR ALL USING (auth.uid() = id);
 CREATE POLICY "Users can create and edit own projects" ON public.projects FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "Users can toggle own likes" ON public.project_likes FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "Users can submit feedback" ON public.feedbacks FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users can add comments" ON public.comments FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Project owners can add updates" ON public.project_updates FOR ALL USING (
   EXISTS (SELECT 1 FROM public.projects WHERE id = project_id AND user_id = auth.uid())
 );
+CREATE POLICY "Users can manage own follows" ON public.follows FOR ALL USING (auth.uid() = follower_id);
 
 -- ==============================================================================
 -- AUTOMATIC PROFILE CREATION TRIGGER
@@ -177,7 +182,7 @@ BEGIN
     COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1)),
     LOWER(REGEXP_REPLACE(COALESCE(NEW.raw_user_meta_data->>'user_name', split_part(NEW.email, '@', 1)), '[^a-zA-Z0-9_]', '', 'g')),
     COALESCE(NEW.raw_user_meta_data->>'avatar_url', NEW.raw_user_meta_data->>'picture', 'https://api.dicebear.com/7.x/avataaars/svg?seed=' || NEW.id),
-    'lumio 메이커',
+    'zemix 메이커',
     'Maker',
     true
   )
