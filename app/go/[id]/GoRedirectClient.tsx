@@ -23,7 +23,7 @@ export default function GoRedirectClient({ projectId }: { projectId: string }) {
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
         <h2 className="text-xl font-bold text-foreground">프로젝트를 찾을 수 없습니다</h2>
         <Link href="/" className="mt-4 text-sm text-primary hover:underline">
-          Zemit 홈으로 이동
+          Zemix 홈으로 이동
         </Link>
       </div>
     );

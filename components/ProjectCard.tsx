@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, MessageCircle, Users } from "lucide-react";
+import { Heart, MessageCircle, Users, Trash2 } from "lucide-react";
 import { Project } from "@/lib/types";
-import { toggleProjectLike } from "@/lib/storage";
+import { toggleProjectLike, isProjectLiked, deleteProject } from "@/lib/storage";
 import { useAuth } from "@/context/AuthContext";
 
 interface ProjectCardProps {
@@ -15,9 +15,38 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project, onLikeChanged }: ProjectCardProps) {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [likesCount, setLikesCount] = useState(project.likesCount);
-  const [isLiked, setIsLiked] = useState(project.isLiked || false);
+  const [isLiked, setIsLiked] = useState(() => isProjectLiked(project.id) || project.isLiked || false);
+
+  const canDelete = Boolean(isAdmin || (user && (user.id === project.author?.id || user.handle === project.author?.handle)));
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!canDelete) return;
+    if (confirm(`'${project.title}' 프로젝트를 삭제하시겠습니까?\n이 작업은 취소할 수 없습니다.`)) {
+      deleteProject(project.id);
+      window.dispatchEvent(new CustomEvent("lumio_data_synced"));
+    }
+  };
+
+  useEffect(() => {
+    setLikesCount(project.likesCount);
+    const storedLiked = isProjectLiked(project.id);
+    setIsLiked(storedLiked || project.isLiked || false);
+  }, [project.id, project.likesCount, project.isLiked]);
+
+  useEffect(() => {
+    const handleLikeEvent = (e: any) => {
+      if (e.detail?.projectId === project.id) {
+        setLikesCount(e.detail.likesCount);
+        setIsLiked(e.detail.isLiked);
+      }
+    };
+    window.addEventListener("lumio_like_changed", handleLikeEvent);
+    return () => window.removeEventListener("lumio_like_changed", handleLikeEvent);
+  }, [project.id]);
 
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -28,7 +57,7 @@ export default function ProjectCard({ project, onLikeChanged }: ProjectCardProps
       }
       return;
     }
-    const result = toggleProjectLike(project.id);
+    const result = toggleProjectLike(project.id, user.id);
     setLikesCount(result.likesCount);
     setIsLiked(result.isLiked);
     if (onLikeChanged) {
@@ -80,9 +109,23 @@ export default function ProjectCard({ project, onLikeChanged }: ProjectCardProps
             {project.tagline}
           </p>
           <div className="mt-1.5 flex flex-col gap-1 text-xs text-muted">
-            <div className="flex min-w-0 items-center gap-1.5">
-              <span className="min-w-0 truncate">{project.author.name}</span>
-              {project.author.isStartingMember && (
+            <div
+              className="flex min-w-0 items-center gap-1.5 cursor-pointer hover:text-foreground"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                router.push(`/builders/${project.author?.id || project.author?.handle || ""}`);
+              }}
+            >
+              {project.author?.avatar && (
+                <img
+                  src={project.author.avatar}
+                  alt={project.author.name}
+                  className="h-4 w-4 shrink-0 rounded-full object-cover border border-border"
+                />
+              )}
+              <span className="min-w-0 truncate font-medium hover:underline">{project.author?.name || "Maker"}</span>
+              {project.author?.isStartingMember && (
                 <span className="rounded-full border border-border bg-surface-muted px-1.5 py-0.5 text-[9px] font-medium leading-none text-muted">
                   Starting Member
                 </span>
@@ -93,16 +136,26 @@ export default function ProjectCard({ project, onLikeChanged }: ProjectCardProps
                 type="button"
                 onClick={handleLike}
                 className={`flex shrink-0 items-center gap-1 cursor-pointer transition-colors ${
-                  isLiked ? "text-danger" : "hover:text-foreground"
+                  isLiked ? "text-rose-500 font-semibold" : "text-muted hover:text-foreground"
                 }`}
               >
-                <Heart className={`h-3 w-3 ${isLiked ? "fill-danger" : ""}`} />
+                <Heart className={`h-3 w-3 ${isLiked ? "fill-rose-500 text-rose-500" : ""}`} />
                 <span>{likesCount}</span>
               </button>
               <span className="flex shrink-0 items-center gap-1">
                 <MessageCircle className="h-3 w-3" />
                 <span>{project.commentsCount + project.feedbacksCount}</span>
               </span>
+              {canDelete && (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="p-1 text-muted hover:text-danger hover:bg-danger-soft rounded transition-colors cursor-pointer"
+                  title={isAdmin ? "프로젝트 강제 삭제 (관리자)" : "프로젝트 삭제"}
+                >
+                  <Trash2 className="h-3 w-3" />
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -188,16 +241,25 @@ export default function ProjectCard({ project, onLikeChanged }: ProjectCardProps
 
         {/* Footer info & stats */}
         <div className="mt-auto flex items-center gap-2.5 pt-2 border-t border-border/50">
-          <div className="flex shrink-0">
-            <img
-              src={project.author.avatar}
-              alt={project.author.name}
-              className="h-8 w-8 shrink-0 rounded-full border border-border object-cover"
-            />
+          <div
+            className="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push(`/builders/${project.author?.id || project.author?.handle || ""}`);
+            }}
+          >
+            <div className="flex shrink-0">
+              <img
+                src={project.author.avatar}
+                alt={project.author.name}
+                className="h-8 w-8 shrink-0 rounded-full border border-border object-cover"
+              />
+            </div>
+            <span className="min-w-0 flex-1 truncate text-xs font-medium text-muted hover:underline hover:text-foreground">
+              {project.author.name}
+            </span>
           </div>
-          <span className="min-w-0 flex-1 truncate text-xs font-medium text-muted">
-            {project.author.name}
-          </span>
 
           <div className="flex shrink-0 flex-col items-end gap-1">
             {project.author.isStartingMember && (
@@ -211,10 +273,10 @@ export default function ProjectCard({ project, onLikeChanged }: ProjectCardProps
                 type="button"
                 onClick={handleLike}
                 className={`flex items-center gap-1 transition-colors cursor-pointer ${
-                  isLiked ? "text-danger" : "hover:text-foreground"
+                  isLiked ? "text-rose-500 font-semibold" : "hover:text-foreground"
                 }`}
               >
-                <Heart className={`h-3.5 w-3.5 ${isLiked ? "fill-danger" : ""}`} />
+                <Heart className={`h-3.5 w-3.5 ${isLiked ? "fill-rose-500 text-rose-500" : ""}`} />
                 <span>{likesCount}</span>
               </button>
 
@@ -227,6 +289,17 @@ export default function ProjectCard({ project, onLikeChanged }: ProjectCardProps
                 <Users className="h-3.5 w-3.5" />
                 <span>{project.followersCount}</span>
               </span>
+
+              {canDelete && (
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="p-1 text-muted hover:text-danger hover:bg-danger-soft rounded transition-colors cursor-pointer ml-auto"
+                  title={isAdmin ? "프로젝트 강제 삭제 (관리자)" : "프로젝트 삭제"}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
           </div>
         </div>

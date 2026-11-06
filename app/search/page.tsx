@@ -110,18 +110,45 @@ export default function SearchPage() {
       </div>
 
       {!q ? (
-        <div className="text-center py-20 text-muted">
-          <p className="text-sm">검색어를 입력하시면 실시간 결과가 표시됩니다.</p>
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
-            {["AI", "SaaS", "게임", "와글와글", "보안", "디자인"].map((tag) => (
-              <button
-                key={tag}
-                onClick={() => setQuery(tag)}
-                className="rounded-full bg-surface-muted px-3 py-1 text-xs text-muted hover:text-foreground cursor-pointer"
-              >
-                #{tag}
-              </button>
-            ))}
+        <div className="py-12 max-w-xl mx-auto space-y-6">
+          <div className="rounded-card border border-border bg-surface p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                <span className="text-rose-500">🔥</span>
+                <span>실시간 인기 검색어 & 급상승 키워드</span>
+              </h3>
+              <span className="text-[10px] text-muted font-mono">LIVE RANKING</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2.5">
+              {[
+                { rank: 1, tag: "AI 에이전트", hot: true },
+                { rank: 2, tag: "Next.js 15", hot: true },
+                { rank: 3, tag: "Supabase", hot: false },
+                { rank: 4, tag: "마이크로 SaaS", hot: true },
+                { rank: 5, tag: "크롬 확장프로그램", hot: false },
+                { rank: 6, tag: "Tailwind v4", hot: false },
+                { rank: 7, tag: "오픈소스", hot: false },
+                { rank: 8, tag: "사이드 프로젝트", hot: false },
+              ].map((item) => (
+                <button
+                  key={item.tag}
+                  onClick={() => setQuery(item.tag)}
+                  className="flex items-center justify-between rounded-control border border-border bg-surface-muted/40 px-3 py-2 text-xs text-foreground hover:bg-surface-muted hover:border-primary/40 transition-all text-left cursor-pointer group"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className={`font-mono text-xs font-bold ${item.rank <= 3 ? "text-primary" : "text-muted"}`}>
+                      {item.rank}
+                    </span>
+                    <span className="group-hover:text-primary transition-colors">{item.tag}</span>
+                  </div>
+                  {item.hot && (
+                    <span className="text-[10px] text-rose-500 font-bold bg-rose-500/10 px-1.5 py-0.2 rounded">
+                      HOT
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       ) : totalResults === 0 ? (

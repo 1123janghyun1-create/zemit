@@ -2,26 +2,49 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Builder } from "@/lib/types";
-import { getCurrentUser, setCurrentUser as storeCurrentUser, upsertBuilder } from "@/lib/storage";
+import { getCurrentUser, setCurrentUser as storeCurrentUser, upsertBuilder, isUserBanned } from "@/lib/storage";
 import { createClient } from "@/lib/supabase/client";
+import { isUserAdmin } from "@/lib/auth";
 
 interface AuthContextType {
   user: Builder | null;
+  isAdmin: boolean;
   loading: boolean;
   signInWithGoogle: (redirectPath?: string) => Promise<{ error: any }>;
   logout: () => Promise<void>;
-  updateUser: (updated: Builder) => void;
+  updateUser: (updated: Builder) => Promise<void>;
   isSupabaseConnected: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  isAdmin: false,
   loading: true,
   signInWithGoogle: async () => ({ error: null }),
   logout: async () => {},
-  updateUser: () => {},
+  updateUser: async () => {},
   isSupabaseConnected: true,
 });
+
+function getPersistentUserKey(userId: string): string {
+  return `zemix_saved_profile_${userId}`;
+}
+
+function getPersistentUserProfile(userId: string): Builder | null {
+  if (typeof window === "undefined" || !userId) return null;
+  try {
+    const raw = localStorage.getItem(getPersistentUserKey(userId));
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return null;
+}
+
+function savePersistentUserProfile(user: Builder): void {
+  if (typeof window === "undefined" || !user?.id) return;
+  try {
+    localStorage.setItem(getPersistentUserKey(user.id), JSON.stringify(user));
+  } catch {}
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<Builder | null>(null);
@@ -40,14 +63,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       meta.picture ||
       `https://api.dicebear.com/7.x/avataaars/svg?seed=${sessionUser.id}`;
     const handle = (meta.user_name || emailPrefix).toLowerCase().replace(/[^a-z0-9_]/g, "") || "maker";
+    const userIsAdmin = isUserAdmin({ id: sessionUser.id, handle, email } as any);
 
     const builder: Builder = {
       id: sessionUser.id,
       name: fullName,
       handle: handle,
       avatar: avatar,
-      bio: meta.bio || "zemit 메이커",
+      bio: meta.bio || "zemix 메이커",
       role: meta.role || "Maker",
+      email: email,
+      isAdmin: userIsAdmin,
       isStartingMember: true,
       socials: {
         website: meta.website,
@@ -59,16 +85,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const loadUserProfile = async (sessionUser: any, supabaseClient: any): Promise<Builder> => {
-    // 1. Google OAuth / raw auth fallback
+    // 1. Check persistent user cache immediately (survives logout!)
+    const persistentCache = getPersistentUserProfile(sessionUser.id);
+    const activeLocal = getCurrentUser();
+    const local = (activeLocal && activeLocal.id === sessionUser.id) ? activeLocal : persistentCache;
+
+    // 2. Google OAuth raw fallback
     const rawFallback = syncUserFromSupabase(sessionUser);
 
-    // 2. Check localStorage for currently stored user
-    const local = getCurrentUser();
-    let current: Builder = (local && local.id === sessionUser.id)
-      ? { ...rawFallback, ...local }
-      : rawFallback;
+    // 3. Fetch from Server API first (server-side query with admin privileges, avoids client-side RLS/timing issues)
+    let serverProfile: any = null;
+    try {
+      const res = await fetch(`/api/builders/${sessionUser.id}`, { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.id && !data.error) {
+          serverProfile = data;
+        }
+      }
+    } catch (e) {
+      console.warn("Server builder profile query error:", e);
+    }
 
-    // 3. Query Supabase profiles table
+    // 4. Fetch directly from Supabase profiles table on client as secondary source
+    let dbProfile: any = null;
     try {
       if (supabaseClient) {
         const { data, error } = await (supabaseClient as any)
@@ -78,49 +118,115 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .maybeSingle();
 
         if (!error && data) {
-          current = {
-            ...current,
-            name: data.name || current.name,
-            handle: data.handle || current.handle,
-            avatar: data.avatar_url || current.avatar,
-            bio: data.bio !== null && data.bio !== undefined ? data.bio : current.bio,
-            role: data.role || current.role,
-            isStartingMember: data.is_starting_member ?? current.isStartingMember,
-            socials: {
-              ...current.socials,
-              github: data.github_url || current.socials?.github,
-              twitter: data.twitter_url || current.socials?.twitter,
-              website: data.website_url || current.socials?.website,
-            },
-          };
+          dbProfile = data;
         }
       }
     } catch (e) {
       console.warn("Profiles query error:", e);
     }
 
-    // 4. Query server store via /api/builders to check if there is an existing builder on disk
-    try {
-      const res = await fetch("/api/builders", { cache: "no-store" });
-      if (res.ok) {
-        const list = await res.json();
-        if (Array.isArray(list)) {
-          const found = list.find((b: any) => b.id === sessionUser.id);
-          if (found) {
-            current = {
-              ...found,
-              ...current,
-              followersCount: found.followersCount ?? current.followersCount ?? 0,
-            };
-          }
-        }
-      }
-    } catch {}
+    // 5. Merge in order of authoritative preference:
+    // Server Profile / DB Profile > Persistent Local Cache > Google Auth Metadata > Raw Fallback
+    const meta = sessionUser.user_metadata || {};
+    const profileSrc = serverProfile || dbProfile;
 
-    setUser(current);
-    storeCurrentUser(current);
-    upsertBuilder(current);
-    return current;
+    const resolvedName =
+      profileSrc?.name ||
+      local?.name ||
+      meta.full_name ||
+      meta.name ||
+      rawFallback.name;
+
+    const resolvedHandle =
+      profileSrc?.handle ||
+      local?.handle ||
+      meta.user_name ||
+      rawFallback.handle;
+
+    const resolvedAvatar =
+      profileSrc?.avatar ||
+      profileSrc?.avatar_url ||
+      local?.avatar ||
+      meta.avatar_url ||
+      meta.picture ||
+      rawFallback.avatar;
+
+    // Bio: Preserve customized bio (never overwrite with default "zemix 메이커" if custom exists)
+    let resolvedBio = "zemix 메이커";
+    if (profileSrc?.bio && profileSrc.bio.trim() !== "") {
+      resolvedBio = profileSrc.bio;
+    } else if (local?.bio && local.bio.trim() !== "") {
+      resolvedBio = local.bio;
+    } else if (meta.bio && meta.bio.trim() !== "") {
+      resolvedBio = meta.bio;
+    }
+
+    // Role: Preserve customized role (never overwrite with default "Maker" if custom exists)
+    let resolvedRole = "Maker";
+    if (profileSrc?.role && profileSrc.role.trim() !== "") {
+      resolvedRole = profileSrc.role;
+    } else if (local?.role && local.role.trim() !== "") {
+      resolvedRole = local.role;
+    } else if (meta.role && meta.role.trim() !== "") {
+      resolvedRole = meta.role;
+    }
+
+    // Socials:
+    const resolvedSocials = {
+      github:
+        profileSrc?.socials?.github ??
+        profileSrc?.github_url ??
+        local?.socials?.github ??
+        (meta.preferred_username ? `https://github.com/${meta.preferred_username}` : ""),
+      twitter:
+        profileSrc?.socials?.twitter ??
+        profileSrc?.twitter_url ??
+        local?.socials?.twitter ??
+        "",
+      website:
+        profileSrc?.socials?.website ??
+        profileSrc?.website_url ??
+        local?.socials?.website ??
+        meta.website ??
+        "",
+    };
+
+    const resolvedEmail = sessionUser.email || (local as any)?.email || "";
+    const userIsAdmin = isUserAdmin({ id: sessionUser.id, handle: resolvedHandle, email: resolvedEmail } as any);
+
+    const resolved: Builder = {
+      id: sessionUser.id,
+      name: resolvedName,
+      handle: resolvedHandle,
+      avatar: resolvedAvatar,
+      bio: resolvedBio,
+      role: resolvedRole,
+      email: resolvedEmail,
+      isAdmin: userIsAdmin,
+      isBanned: profileSrc?.isBanned || profileSrc?.is_banned || isUserBanned(sessionUser.id) || (local ? local.isBanned : false) || false,
+      isStartingMember: profileSrc?.isStartingMember ?? profileSrc?.is_starting_member ?? (local ? local.isStartingMember : true),
+      followersCount: profileSrc?.followersCount ?? profileSrc?.followers_count ?? (local ? local.followersCount : 0),
+      socials: resolvedSocials,
+    };
+
+    // 6. Save to active user state AND persistent cache
+    setUser(resolved);
+    storeCurrentUser(resolved);
+    savePersistentUserProfile(resolved);
+    upsertBuilder(resolved);
+
+    // Only register to server API if the server didn't have this builder at all
+    if (!serverProfile && !dbProfile) {
+      try {
+        fetch("/api/builders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(resolved),
+        }).catch(() => {});
+      } catch {}
+    }
+
+    return resolved;
   };
 
   useEffect(() => {
@@ -204,14 +310,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     window.location.href = "/";
   };
 
-  const updateUser = async (updated: Builder) => {
+  const updateUser = async (updated: Builder): Promise<void> => {
     setUser(updated);
     storeCurrentUser(updated);
+    savePersistentUserProfile(updated);
     upsertBuilder(updated);
+
+    // 1. Sync to server store via API
+    try {
+      await fetch("/api/builders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updated),
+      });
+    } catch (e) {
+      console.warn("API builder sync error:", e);
+    }
 
     const supabase = createClient();
     if (supabase) {
-      // 1. Update Supabase Auth user_metadata
+      // 2. Update Supabase Auth user_metadata
       try {
         await supabase.auth.updateUser({
           data: {
@@ -222,15 +340,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             picture: updated.avatar,
             bio: updated.bio,
             role: updated.role,
-            website: updated.socials?.website,
-            github: updated.socials?.github,
+            website: updated.socials?.website || null,
+            github: updated.socials?.github || null,
           },
         });
       } catch (authErr) {
         console.warn("Auth updateUser error:", authErr);
       }
 
-      // 2. Upsert into profiles table
+      // 3. Upsert into profiles table
       try {
         await (supabase as any).from("profiles").upsert({
           id: updated.id,
@@ -239,20 +357,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           avatar_url: updated.avatar,
           bio: updated.bio,
           role: updated.role,
-          github_url: updated.socials?.github,
-          website_url: updated.socials?.website,
+          github_url: updated.socials?.github || null,
+          website_url: updated.socials?.website || null,
           updated_at: new Date().toISOString(),
         });
       } catch (profileErr) {
         console.warn("Profiles update error:", profileErr);
       }
+
+      // 4. Update author info across user's projects and community posts in Supabase
+      try {
+        await (supabase as any)
+          .from("projects")
+          .update({ author: updated })
+          .eq("user_id", updated.id);
+      } catch {}
+
+      try {
+        await (supabase as any)
+          .from("community_posts")
+          .update({ author: updated })
+          .eq("author_id", updated.id);
+      } catch {}
+    }
+
+    // 5. Dispatch global sync event
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("lumio_data_synced"));
     }
   };
+
+  const isAdmin = isUserAdmin(user);
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        isAdmin,
         loading,
         signInWithGoogle,
         logout,

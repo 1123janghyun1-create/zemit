@@ -1,32 +1,126 @@
 {
   "builders": [
     {
-      "id": "b1b8571a-4858-4d23-b835-d187d664bfd1",
-      "name": "장현",
-      "handle": "1123janghyun4",
-      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocKJQwrEG05G53-K6xtmvTC790HoDfyz_-F0VeJZSVYAtAFgFw=s96-c",
-      "bio": "lumio 메이커",
-      "role": "Maker",
-      "isStartingMember": true,
-      "socials": {},
-      "followersCount": 1,
-      "isFollowing": true
+      "id": "builder-test-user",
+      "name": "홍길동",
+      "handle": "gildong",
+      "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=gildong",
+      "role": "Full-stack",
+      "followersCount": 0
     },
     {
       "id": "08f75bdf-ba36-4ce2-a78d-ac289cb1d5c3",
-      "name": "장현",
+      "bio": "사용자에게 실질적인 가치를 주는 서비스를 만드는 메이커 장현입니다.",
+      "name": "Hyun",
+      "role": "Zemix developer",
+      "email": "1123janghyun1@gmail.com",
+      "avatar": "https://res.cloudinary.com/hesqv76c/image/upload/v1792893497/lumio/iggr6ecaw1tza7x6qz3q.png",
       "handle": "1123janghyun1",
-      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocLn7c9VgWMq0KF-OGNWtGVwHKhKzUCDj9H87D4tAcncEaPrlt4=s96-c",
-      "bio": "lumio 메이커",
-      "role": "Maker",
-      "isStartingMember": true,
-      "socials": {},
-      "followersCount": 0
+      "isAdmin": true,
+      "socials": {
+        "github": "",
+        "website": "https://zemix.vercel.app"
+      },
+      "isBanned": false,
+      "followersCount": 0,
+      "isStartingMember": true
     }
   ],
-  "projects": [],
+  "follows": {
+    "83b111d7-5535-41ad-bb30-0cd08c2cf04e": []
+  },
+  "projectLikes": {
+    "proj-1792573739868": []
+  },
+  "communityLikes": {},
+  "projects": [
+    {
+      "id": "proj-1792573739868",
+      "title": "zemix",
+      "tagline": "사이드 프로젝트 아이디어를 공유하고, 함께 만들 동료 메이커를 찾는 커뮤니티",
+      "description": "1. 어떤 문제를 해결하고자 만들었나요?\n사이드 프로젝트를 시작할 때 아이디어를 혼자 고민하고, 뜻이 맞는 팀원을 구하거나 완성된 서비스를 알릴 곳을 찾는 과정이 생각보다 번거롭습니다. 메이커들이 자신의 열정과 결과물을 쉽게 공유하고, 서로 영감을 주고받을 수 있는 전용 공간의 필요성을 느껴 만들게 되었습니다.\n\n2. 주요 기능 및 특징\n\n프로젝트 탐색 및 공유: 아이디어 단계부터 런칭된 서비스까지 내 프로젝트를 등록하고 피드백을 받을 수 있습니다.\n\n메이커 커뮤니티: 다양한 분야의 빌더들과 소통하고 협업할 수 있는 네트워킹 공간을 제공합니다.\n\n팀원 및 도움 구하기: 프로젝트 성장에 필요한 피드백이나 협업 파트너를 쉽게 찾을 수 있습니다.\n\n3. 앞으로의 계획\n메이커들이 더 즐겁게 빌드(Build)하고 성장할 수 있도록 다양한 기능과 커뮤니티 인터랙션을 고도화해 나갈 예정입니다!",
+      "status": "Public",
+      "stage": "public",
+      "logo": "https://res.cloudinary.com/hesqv76c/image/upload/v1792573567/lumio/rimwfbdlbn7avrxwcb4a.png",
+      "coverImage": "https://res.cloudinary.com/hesqv76c/image/upload/v1792573555/lumio/opxseokykejyxpluwpl4.png",
+      "screenshots": [
+        "https://res.cloudinary.com/hesqv76c/image/upload/v1792573677/lumio/no4igpd26zvypnvtiota.png",
+        "https://res.cloudinary.com/hesqv76c/image/upload/v1792573684/lumio/skoa6ewxyrspw32rozpy.png",
+        "https://res.cloudinary.com/hesqv76c/image/upload/v1792573689/lumio/nqtkp8cfjynos31f896k.png",
+        "https://res.cloudinary.com/hesqv76c/image/upload/v1792573695/lumio/xll0np7i1ksjncsc3lvu.png"
+      ],
+      "websiteUrl": "https://zemix.vercel.app",
+      "author": {
+        "id": "08f75bdf-ba36-4ce2-a78d-ac289cb1d5c3",
+        "bio": "사용자에게 실질적인 가치를 주는 서비스를 만드는 메이커 장현입니다.",
+        "name": "Hyun",
+        "role": "Zemix developer",
+        "email": "1123janghyun1@gmail.com",
+        "avatar": "https://res.cloudinary.com/hesqv76c/image/upload/v1792893497/lumio/iggr6ecaw1tza7x6qz3q.png",
+        "handle": "1123janghyun1",
+        "isAdmin": true,
+        "socials": {
+          "github": "",
+          "website": "https://zemix.vercel.app"
+        },
+        "isBanned": false,
+        "followersCount": 0,
+        "isStartingMember": true
+      },
+      "tags": [
+        "Productivity",
+        "Developer Tools",
+        "Community",
+        "zemix"
+      ],
+      "likesCount": 2,
+      "viewsCount": 20,
+      "commentsCount": 0,
+      "feedbacksCount": 0,
+      "followersCount": 0,
+      "lookingFor": [
+        "tester",
+        "feedback",
+        "developer",
+        "cofounder"
+      ],
+      "lookingForTeam": true,
+      "lookingForTeamRoles": [
+        "developer",
+        "cofounder"
+      ],
+      "lookingForTesters": true,
+      "insights": {
+        "viewsTotal": 1,
+        "likesTotal": 0,
+        "outboundClicks": 0,
+        "viewsByDay": [],
+        "referrers": [],
+        "trendingRank": 1,
+        "rankChange": 0,
+        "stage": "public",
+        "lookingFor": [
+          "tester",
+          "feedback",
+          "developer",
+          "cofounder"
+        ],
+        "likedUserIds": [
+          "83b111d7-5535-41ad-bb30-0cd08c2cf04e",
+          "08f75bdf-ba36-4ce2-a78d-ac289cb1d5c3"
+        ],
+        "lookingForTeamRoles": [
+          "developer",
+          "cofounder"
+        ]
+      },
+      "createdAt": "2026-10-21T09:08:59.868+00:00",
+      "updatedAt": "2026-10-25T17:48:20.235Z"
+    }
+  ],
   "communityPosts": [],
   "feedbacks": [],
   "comments": [],
-  "timeline": []
+  "timeline": [],
+  "bannedUsers": []
 }

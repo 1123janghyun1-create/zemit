@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Heart, Users, ArrowUpRight } from "lucide-react";
 import { Project } from "@/lib/types";
-import { toggleProjectLike } from "@/lib/storage";
+import { toggleProjectLike, isProjectLiked } from "@/lib/storage";
 import { useAuth } from "@/context/AuthContext";
 
 interface FeaturedProjectProps {
@@ -16,7 +16,24 @@ export default function FeaturedProject({ project }: FeaturedProjectProps) {
   const router = useRouter();
   const { user } = useAuth();
   const [likesCount, setLikesCount] = useState(project.likesCount);
-  const [isLiked, setIsLiked] = useState(project.isLiked || false);
+  const [isLiked, setIsLiked] = useState(() => isProjectLiked(project.id) || project.isLiked || false);
+
+  useEffect(() => {
+    setLikesCount(project.likesCount);
+    const storedLiked = isProjectLiked(project.id);
+    setIsLiked(storedLiked || project.isLiked || false);
+  }, [project.id, project.likesCount, project.isLiked]);
+
+  useEffect(() => {
+    const handleLikeEvent = (e: any) => {
+      if (e.detail?.projectId === project.id) {
+        setLikesCount(e.detail.likesCount);
+        setIsLiked(e.detail.isLiked);
+      }
+    };
+    window.addEventListener("lumio_like_changed", handleLikeEvent);
+    return () => window.removeEventListener("lumio_like_changed", handleLikeEvent);
+  }, [project.id]);
 
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -27,7 +44,7 @@ export default function FeaturedProject({ project }: FeaturedProjectProps) {
       }
       return;
     }
-    const result = toggleProjectLike(project.id);
+    const result = toggleProjectLike(project.id, user.id);
     setLikesCount(result.likesCount);
     setIsLiked(result.isLiked);
   };
@@ -105,31 +122,42 @@ export default function FeaturedProject({ project }: FeaturedProjectProps) {
             </p>
           </div>
 
-          <div className="hidden flex-wrap items-center gap-4 text-sm text-white/90 sm:flex">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-white/90">
             <button
               type="button"
               onClick={handleLike}
-              className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
+              className={`flex items-center gap-1.5 transition-colors cursor-pointer ${
+                isLiked ? "text-rose-400 font-semibold" : "text-white/90 hover:text-white"
+              }`}
             >
-              <Heart className={`h-4 w-4 ${isLiked ? "fill-danger text-danger" : ""}`} />
+              <Heart className={`h-4 w-4 ${isLiked ? "fill-rose-500 text-rose-500" : ""}`} />
               <span>{likesCount}</span>
             </button>
 
-            <span className="flex items-center gap-1.5">
+            <span className="hidden sm:flex items-center gap-1.5">
               <Users className="h-4 w-4" />
               <span>{project.followersCount} followers</span>
             </span>
 
-            <span className="flex min-w-0 items-center gap-1.5">
-              <img
-                src={project.author.avatar}
-                alt={project.author.name}
-                className="h-5 w-5 shrink-0 rounded-full object-cover border border-white/40"
-              />
-              <span className="min-w-0 truncate font-medium">
-                {project.author.name}
+            {project.author && (
+              <span
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  router.push(`/builders/${project.author.id || project.author.handle || ""}`);
+                }}
+                className="flex min-w-0 items-center gap-1.5 cursor-pointer hover:underline hover:text-white"
+              >
+                <img
+                  src={project.author.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=maker"}
+                  alt={project.author.name}
+                  className="h-5 w-5 shrink-0 rounded-full object-cover border border-white/40"
+                />
+                <span className="min-w-0 truncate font-medium">
+                  {project.author.name}
+                </span>
               </span>
-            </span>
+            )}
           </div>
 
           <span className="mt-1 flex w-fit items-center gap-1.5 rounded-[12px] bg-white px-3 py-1.5 text-xs font-semibold text-gray-900 transition-transform duration-200 group-hover:translate-x-0.5 sm:mt-2 sm:px-4 sm:py-2 sm:text-sm">

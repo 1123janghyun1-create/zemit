@@ -8,10 +8,10 @@ import { useLanguage } from "@/context/LanguageContext";
 
 export default function MobileNav() {
   const pathname = usePathname();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
 
   const items = [
-    { label: "Home", href: "/", icon: Home },
+    { label: language === "ko" ? "홈" : "Home", href: "/", icon: Home },
     { label: t("nav.explore"), href: "/explore", icon: Compass },
     { label: t("nav.activity"), href: "/activity", icon: Activity },
     { label: t("nav.builders"), href: "/builders", icon: Users },

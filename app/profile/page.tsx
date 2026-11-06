@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, Save, Check, Globe } from "lucide-react";
+import { Upload, Save, Check, Globe, Sparkles, Zap, Award } from "lucide-react";
 import { GithubIcon } from "@/components/Icons";
 import { useAuth } from "@/context/AuthContext";
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import { getBuilderXp, getDailyDeveloperFortune } from "@/lib/storage";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function ProfilePage() {
   const [github, setGithub] = useState(user?.socials?.github || "");
   const [website, setWebsite] = useState(user?.socials?.website || "");
   const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   React.useEffect(() => {
@@ -57,24 +59,32 @@ export default function ProfilePage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    if (!user || saving) return;
 
-    const updated = {
-      ...user,
-      name: name.trim() || user.name,
-      handle: handle.trim().toLowerCase().replace(/[^a-z0-9_]/g, "") || user.handle,
-      bio: bio.trim(),
-      role: role.trim() || "Developer",
-      avatar: avatar || user.avatar,
-      socials: {
-        github: github.trim(),
-        website: website.trim(),
-      },
-    };
+    try {
+      setSaving(true);
+      const updated = {
+        ...user,
+        name: name.trim() || user.name,
+        handle: handle.trim().toLowerCase().replace(/[^a-z0-9_]/g, "") || user.handle,
+        bio: bio.trim(),
+        role: role.trim() || "Developer",
+        avatar: avatar || user.avatar,
+        socials: {
+          github: github.trim(),
+          website: website.trim(),
+        },
+      };
 
-    await updateUser(updated);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+      await updateUser(updated);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } catch (err: any) {
+      console.error("Save profile error:", err);
+      alert("프로필 저장 중 오류가 발생했습니다. 다시 시도해 주세요.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading || !user) {
@@ -93,9 +103,57 @@ export default function ProfilePage() {
           프로필 설정 (Profile)
         </h1>
         <p className="mt-1 text-sm text-muted">
-          Zemit 커뮤니티와 프로젝트에 노출되는 빌더 정보를 수정합니다.
+          Zemix 커뮤니티와 프로젝트에 노출되는 빌더 정보를 수정합니다.
         </p>
       </div>
+
+      {/* Feature 42: Builder XP & Tier Card */}
+      {(() => {
+        const xpInfo = getBuilderXp(user.id);
+        const fortune = getDailyDeveloperFortune();
+        return (
+          <div className="mb-6 space-y-4">
+            <div className="rounded-card border border-primary/30 bg-primary-soft/20 p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <span className="text-[10px] font-bold tracking-wider uppercase text-primary">Builder Level & Tier</span>
+                <h3 className="text-lg font-black text-foreground flex items-center gap-1.5 mt-0.5">
+                  <Zap className="h-4 w-4 text-amber-500 fill-current" />
+                  <span>Lv.{xpInfo.level} {xpInfo.tier}</span>
+                </h3>
+                <p className="text-xs text-muted mt-1">
+                  프로젝트 등록(+100 XP), 피드백 작성(+30 XP), 버그 제보(+20 XP)로 레벨을 올리세요.
+                </p>
+              </div>
+              <div className="sm:text-right shrink-0">
+                <span className="font-mono text-xs font-bold text-foreground">{xpInfo.xp} / {xpInfo.nextLevelXp} XP</span>
+                <div className="mt-1 h-2 w-32 rounded-full bg-surface border border-border overflow-hidden">
+                  <div
+                    className="h-full bg-primary transition-all duration-500"
+                    style={{ width: `${xpInfo.xp % 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 45: Daily Developer Fortune */}
+            <div className="rounded-card border border-amber-500/20 bg-amber-500/5 p-4 text-xs space-y-2">
+              <div className="flex items-center justify-between text-amber-600 dark:text-amber-400 font-bold">
+                <span className="flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>오늘의 빌더 운세 & 행운의 스택</span>
+                </span>
+                <span className="text-[10px] font-mono">DAILY LUCK</span>
+              </div>
+              <p className="text-muted leading-relaxed italic">"{fortune.quote}"</p>
+              <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px] text-muted">
+                <span>🍀 행운의 기술: <strong className="text-foreground">{fortune.luckyTech}</strong></span>
+                <span>🎨 행운의 색상: <strong className="text-foreground">{fortune.luckyColor}</strong></span>
+                <span>💡 팁: <span className="text-foreground">{fortune.memeTip}</span></span>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       <form onSubmit={handleSave} className="space-y-6">
         <div className="rounded-card border border-border bg-surface p-6 shadow-sm space-y-6">
@@ -235,10 +293,11 @@ export default function ProfilePage() {
           )}
           <button
             type="submit"
-            className="flex items-center gap-1.5 rounded-control bg-primary px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-primary-hover cursor-pointer"
+            disabled={saving || uploading}
+            className="flex items-center gap-1.5 rounded-control bg-primary px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-primary-hover disabled:opacity-50 cursor-pointer transition-all"
           >
             <Save className="h-3.5 w-3.5" />
-            변경사항 저장
+            {saving ? "저장 중..." : "변경사항 저장"}
           </button>
         </div>
       </form>

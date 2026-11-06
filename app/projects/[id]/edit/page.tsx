@@ -1,5 +1,7 @@
 import EditProjectClient from "./EditProjectClient";
 
+export const instant = false;
+
 export function generateStaticParams() {
   return [{ id: "preview" }];
 }

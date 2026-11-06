@@ -63,7 +63,7 @@ const HELP_OPTIONS = [
 
 export default function EditProjectClient({ projectId }: { projectId: string }) {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
@@ -177,7 +177,7 @@ export default function EditProjectClient({ projectId }: { projectId: string }) 
   }
 
   const isOwner = Boolean(
-    user && (user.id === project.author.id || user.handle === project.author.handle)
+    user && (user.id === project.author.id || user.handle === project.author.handle || isAdmin)
   );
 
   if (!isOwner) {
@@ -282,7 +282,7 @@ export default function EditProjectClient({ projectId }: { projectId: string }) 
     }
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !tagline.trim()) {
       alert("프로젝트 이름과 한 줄 소개는 필수입니다.");
@@ -296,34 +296,47 @@ export default function EditProjectClient({ projectId }: { projectId: string }) 
     else if (stage === "building") legacyStatus = "Beta";
     else if (stage === "beta") legacyStatus = "Beta";
 
-    const updated = updateProject(projectId, {
-      title: name.trim(),
-      tagline: tagline.trim(),
-      description: description.trim(),
-      status: legacyStatus,
-      stage,
-      coverImage: coverImage.trim(),
-      coverGradient,
-      logo: logoImage.trim(),
-      screenshots,
-      tags,
-      lookingFor,
-      websiteUrl: website.trim(),
-      demoUrl: demo.trim() || undefined,
-      githubUrl: github.trim() || undefined,
-      teamChat: teamChatUrl.trim()
-        ? { platform: teamChatPlatform, url: teamChatUrl.trim() }
-        : undefined,
-      lookingForTeam: lookingFor.some((h) =>
-        ["developer", "designer", "cofounder"].includes(h)
-      ),
-      lookingForTesters: lookingFor.includes("tester"),
-    });
+    try {
+      const updated = await updateProject(
+        projectId,
+        {
+          title: name.trim(),
+          tagline: tagline.trim(),
+          description: description.trim(),
+          status: legacyStatus,
+          stage,
+          coverImage: coverImage.trim(),
+          coverGradient,
+          logo: logoImage.trim(),
+          screenshots,
+          tags,
+          lookingFor,
+          websiteUrl: website.trim(),
+          demoUrl: (demo.trim() && demo.trim() !== website.trim()) ? demo.trim() : undefined,
+          githubUrl: github.trim() || undefined,
+          teamChat: teamChatUrl.trim()
+            ? { platform: teamChatPlatform, url: teamChatUrl.trim() }
+            : undefined,
+          lookingForTeam: lookingFor.some((h) =>
+            ["developer", "designer", "cofounder"].includes(h)
+          ),
+          lookingForTesters: lookingFor.includes("tester"),
+        },
+        project || undefined
+      );
 
-    setSaving(false);
-    if (updated) {
-      alert("프로젝트 정보가 성공적으로 수정되었습니다.");
-      router.push(`/projects/${projectId}`);
+      if (updated) {
+        alert("프로젝트 정보가 성공적으로 수정되었습니다.");
+        router.push(`/projects/${projectId}`);
+        router.refresh();
+      } else {
+        alert("프로젝트 정보를 수정하지 못했습니다. 다시 시도해 주세요.");
+      }
+    } catch (err: any) {
+      console.error("Failed to update project:", err);
+      alert(`수정 중 오류가 발생했습니다: ${err?.message || "다시 시도해 주세요."}`);
+    } finally {
+      setSaving(false);
     }
   };
 

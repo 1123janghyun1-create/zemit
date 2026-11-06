@@ -14,21 +14,28 @@ import {
   CheckCircle2,
   Share2,
   ChevronDown,
+  Code,
+  Cpu,
+  Database,
+  Award,
+  Terminal,
+  Layers,
+  Bot,
+  ExternalLink,
 } from "lucide-react";
 import { HexagonLogo } from "@/components/Icons";
 
 export default function AboutPage() {
-  const [activeScreen, setActiveScreen] = useState<"home" | "builders" | "timeline">("home");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const faqs = [
     {
-      q: "zemit은 무료로 이용할 수 있나요?",
-      a: "네, zemit은 모든 메이커와 사용자가 100% 무료로 이용할 수 있는 열린 플랫폼입니다. 프로젝트 등록, 피드백 수집, 팀원 모집, 인사이트 분석까지 어떤 제한 없이 자유롭게 활용하실 수 있습니다.",
+      q: "zemix는 무료로 이용할 수 있나요?",
+      a: "네, zemix는 모든 메이커와 사용자가 100% 무료로 이용할 수 있는 열린 플랫폼입니다. 프로젝트 등록, 피드백 수집, 팀원 모집, 인사이트 분석까지 어떤 제한 없이 자유롭게 활용하실 수 있습니다.",
     },
     {
       q: "아직 완성되지 않은 아이디어나 MVP도 등록할 수 있나요?",
-      a: "물론입니다! zemit은 완성된 프로덕트뿐만 아니라 아이디어 구상 단계, 프로토타입, 초기 베타 테스트 단계의 프로젝트를 가장 환영합니다. 초기부터 실제 사용자의 피드백을 받으며 함께 키워나가는 것이 zemit의 핵심 가치입니다.",
+      a: "물론입니다! zemix는 완성된 프로덕트뿐만 아니라 아이디어 구상 단계, 프로토타입, 초기 베타 테스트 단계의 프로젝트를 가장 환영합니다. 초기부터 실제 사용자의 피드백을 받으며 함께 키워나가는 것이 zemix의 핵심 가치입니다.",
     },
     {
       q: "트렌딩 랭킹 알고리즘은 어떻게 작동하나요?",
@@ -36,7 +43,7 @@ export default function AboutPage() {
     },
     {
       q: "홍보용 추적 링크(/go/프로젝트ID)는 무엇인가요?",
-      a: "내 프로젝트 상세 페이지의 '공유' 버튼이나 외부(트위터, 디스코드, 링크드인 등)에 zemit/go/프로젝트ID 링크를 공유하면, 외부에서 내 실제 서비스로 넘어가는 아웃바운드 클릭수와 유입 경로를 프로젝트 인사이트 탭에서 실시간으로 확인할 수 있습니다.",
+      a: "내 프로젝트 상세 페이지의 '공유' 버튼이나 외부(트위터, 디스코드, 링크드인 등)에 zemix/go/프로젝트ID 링크를 공유하면, 외부에서 내 실제 서비스로 넘어가는 아웃바운드 클릭수와 유입 경로를 프로젝트 인사이트 탭에서 실시간으로 확인할 수 있습니다.",
     },
   ];
 
@@ -69,220 +76,42 @@ export default function AboutPage() {
           />
         </div>
 
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[5fr_7fr] lg:gap-16">
-            {/* Left Column: Headlines & CTA */}
-            <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/80 px-3.5 py-1 text-xs font-semibold text-foreground backdrop-blur-md shadow-sm mb-6">
-                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/20 text-primary">
-                  <HexagonLogo className="h-2.5 w-2.5" strokeWidth={2.5} />
-                </span>
-                <span>Meet users. Build together.</span>
-              </div>
+        <div className="mx-auto max-w-4xl px-6 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/80 px-3.5 py-1 text-xs font-semibold text-foreground backdrop-blur-md shadow-sm mb-6">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/20 text-primary">
+              <HexagonLogo className="h-2.5 w-2.5" strokeWidth={2.5} />
+            </span>
+            <span>Meet users. Build together.</span>
+          </div>
 
-              <h1 className="text-4xl font-extrabold leading-[1.18] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-                On{" "}
-                <span
-                  className="whitespace-nowrap bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 bg-clip-text text-transparent font-black"
-                >
-                  zemit
-                </span>
-                ,<br />
-                Build it, show it, grow it together
-              </h1>
+          <h1 className="text-4xl font-extrabold leading-[1.18] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            On{" "}
+            <span
+              className="whitespace-nowrap bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 bg-clip-text text-transparent font-black"
+            >
+              zemix
+            </span>
+            ,<br />
+            Build it, show it, grow it together
+          </h1>
 
-              <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg lg:mx-0">
-                아이디어에서 첫 런칭까지, zemit에서 첫 사용자를 만나보세요. 프로젝트 등록, 유저 피드백 추적, 팀원 및 테스터 매칭, 실시간 트렌딩 노출과 유입 경로 인사이트까지 — 사이드 프로젝트 성장에 필요한 모든 것을 한곳에서 제공합니다.
-              </p>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
+            아이디어에서 첫 런칭까지, zemix에서 첫 사용자를 만나보세요. 프로젝트 등록, 유저 피드백 추적, 팀원 및 테스터 매칭, 실시간 트렌딩 노출과 유입 경로 인사이트까지 — 사이드 프로젝트 성장에 필요한 모든 것을 한곳에서 제공합니다.
+          </p>
 
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5 lg:justify-start">
-                <Link
-                  href="/projects/new"
-                  className="rounded-[12px] bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary-hover hover:shadow-md cursor-pointer"
-                >
-                  프로젝트 등록하기
-                </Link>
-                <Link
-                  href="/explore"
-                  className="rounded-[12px] border border-border bg-surface px-7 py-3.5 text-sm font-semibold text-foreground shadow-sm transition-all duration-200 hover:bg-surface-muted cursor-pointer"
-                >
-                  프로젝트 둘러보기
-                </Link>
-              </div>
-            </div>
-
-            {/* Right Column: Interactive Product Showcase */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="w-full max-w-xl">
-                {/* Device Bezel */}
-                <div
-                  className="rounded-2xl p-3 sm:p-4 border border-white/10"
-                  style={{
-                    background: "linear-gradient(180deg, #2b2b30 0%, #17171a 100%)",
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 24px 48px -16px rgba(0,0,0,0.4)",
-                  }}
-                >
-                  <div className="mb-2 flex justify-center sm:mb-3">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
-                  </div>
-
-                  {/* Device Screen Content */}
-                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-surface border border-border shadow-inner">
-                    {/* Simulated Top Browser Bar */}
-                    <div className="flex items-center gap-1.5 border-b border-border bg-surface-muted px-3 py-2">
-                      <span className="h-2 w-2 rounded-full bg-danger/60" />
-                      <span className="h-2 w-2 rounded-full bg-warning/60" />
-                      <span className="h-2 w-2 rounded-full bg-success/60" />
-                      <div className="mx-auto flex h-4.5 w-48 items-center justify-center rounded-md bg-surface px-2 text-[9px] text-muted font-mono">
-                        zemit.app
-                      </div>
-                    </div>
-
-                    {/* Inside preview */}
-                    <div className="p-3 overflow-hidden h-[calc(100%-30px)] flex flex-col justify-between">
-                      {activeScreen === "home" && (
-                        <div className="space-y-2 animate-fade-in">
-                          <div className="flex items-center justify-between border-b border-border/50 pb-2">
-                            <div className="flex items-center gap-1.5">
-                              <span className="flex h-5 w-5 items-center justify-center rounded-md border border-border bg-surface">
-                                <HexagonLogo className="h-3 w-3 text-primary" strokeWidth={2.5} />
-                              </span>
-                              <span className="text-xs font-bold text-foreground">zemit</span>
-                            </div>
-                            <span className="rounded-full bg-primary-soft px-2 py-0.5 text-[9px] font-semibold text-primary">
-                              Featured Today
-                            </span>
-                          </div>
-
-                          {/* Mini Card */}
-                          <div className="rounded-lg border border-border bg-surface-muted/60 p-2.5 flex items-center gap-3">
-                            <div className="h-10 w-10 shrink-0 rounded-md bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs">
-                              P
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-1.5">
-                                <span className="font-semibold text-xs text-foreground truncate">PPT SUMMARY AI</span>
-                                <span className="rounded-full bg-warning-soft px-1.5 py-0.2 text-[8px] font-medium text-warning">Beta</span>
-                              </div>
-                              <p className="text-[10px] text-muted truncate mt-0.5">
-                                기울어진 PPT 사진 1초 만에 평면 보정 & 보고서 생성
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-2 pt-1">
-                            <div className="rounded-md border border-border bg-surface p-2">
-                              <p className="text-[10px] font-semibold text-foreground truncate">와글와글 세포전</p>
-                              <p className="text-[8px] text-muted truncate">군집 PvP 서바이벌</p>
-                            </div>
-                            <div className="rounded-md border border-border bg-surface p-2">
-                              <p className="text-[10px] font-semibold text-foreground truncate">PageRivet</p>
-                              <p className="text-[8px] text-muted truncate">AI 웹 에디터</p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {activeScreen === "builders" && (
-                        <div className="space-y-2 animate-fade-in">
-                          <p className="text-[11px] font-bold text-foreground">Active Builders</p>
-                          <div className="space-y-1.5">
-                            {[
-                              { name: "Dev An", role: "Game Dev", tag: "Starting Member" },
-                              { name: "Raneree", role: "AI Dev", tag: "Starting Member" },
-                              { name: "thewon-io", role: "AI Engineer", tag: "Founding Member" },
-                            ].map((b, i) => (
-                              <div key={i} className="flex items-center justify-between rounded-md border border-border bg-surface-muted/50 p-1.5">
-                                <div className="flex items-center gap-2">
-                                  <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary">
-                                    {b.name[0]}
-                                  </div>
-                                  <div>
-                                    <p className="text-[10px] font-semibold text-foreground leading-none">{b.name}</p>
-                                    <p className="text-[8px] text-muted">{b.role}</p>
-                                  </div>
-                                </div>
-                                <span className="rounded-full bg-surface px-1.5 py-0.5 text-[8px] text-muted border border-border">
-                                  {b.tag}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {activeScreen === "timeline" && (
-                        <div className="space-y-2 animate-fade-in">
-                          <p className="text-[11px] font-bold text-foreground">Live Milestone Updates</p>
-                          <div className="space-y-2 border-l-2 border-primary/40 pl-2.5 ml-1">
-                            <div className="relative">
-                              <span className="absolute -left-[15px] top-1 h-2 w-2 rounded-full bg-primary" />
-                              <p className="text-[10px] font-semibold text-foreground">v1.2.0 팀전 하이브 부수기 릴리즈</p>
-                              <p className="text-[8px] text-muted">서버 틱레이트 60fps 최적화 및 신규 핑 시스템 추가</p>
-                            </div>
-                            <div className="relative">
-                              <span className="absolute -left-[15px] top-1 h-2 w-2 rounded-full bg-muted-foreground" />
-                              <p className="text-[10px] font-semibold text-foreground">v1.1.0 글로벌 리더보드 오픈</p>
-                              <p className="text-[8px] text-muted">첫 공식 오픈 베타 런칭 완료</p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Device Stand */}
-                <div
-                  className="relative mx-auto h-7 w-16 sm:h-8 sm:w-20"
-                  style={{
-                    background: "linear-gradient(180deg, #26262a 0%, #1a1a1d 100%)",
-                    clipPath: "polygon(32% 0%, 68% 0%, 80% 100%, 20% 100%)",
-                  }}
-                  aria-hidden="true"
-                />
-                <div
-                  className="mx-auto h-2 w-28 rounded-full sm:w-36"
-                  style={{ background: "linear-gradient(180deg, #26262a 0%, #1a1a1d 100%)" }}
-                  aria-hidden="true"
-                />
-
-                {/* Interactive Screen Tab Controls */}
-                <div className="mt-4 flex items-center justify-center gap-3">
-                  <span className="h-1.5 w-1.5 rounded-full bg-success" />
-                  <p className="text-[11px] font-medium text-muted">Actual product UI preview</p>
-                </div>
-                <div className="mt-2 flex items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setActiveScreen("home")}
-                    className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer ${
-                      activeScreen === "home" ? "bg-primary text-white" : "bg-surface-muted text-muted hover:text-foreground"
-                    }`}
-                  >
-                    Home
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveScreen("builders")}
-                    className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer ${
-                      activeScreen === "builders" ? "bg-primary text-white" : "bg-surface-muted text-muted hover:text-foreground"
-                    }`}
-                  >
-                    Builders
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveScreen("timeline")}
-                    className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer ${
-                      activeScreen === "timeline" ? "bg-primary text-white" : "bg-surface-muted text-muted hover:text-foreground"
-                    }`}
-                  >
-                    Timeline
-                  </button>
-                </div>
-              </div>
-            </div>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
+            <Link
+              href="/projects/new"
+              className="rounded-[12px] bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary-hover hover:shadow-md cursor-pointer"
+            >
+              프로젝트 등록하기
+            </Link>
+            <Link
+              href="/explore"
+              className="rounded-[12px] border border-border bg-surface px-7 py-3.5 text-sm font-semibold text-foreground shadow-sm transition-all duration-200 hover:bg-surface-muted cursor-pointer"
+            >
+              프로젝트 둘러보기
+            </Link>
           </div>
         </div>
       </section>
@@ -340,14 +169,14 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Why Zemit Section */}
+      {/* Why Zemix Section */}
       <section className="mx-auto max-w-5xl px-6 pt-24">
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-[0.15em] text-primary">
-            WHY ZEMIT
+            WHY ZEMIX
           </p>
           <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            zemit이 다른 플랫폼과 다른 점
+            zemix가 다른 플랫폼과 다른 점
           </h2>
         </div>
 
@@ -467,7 +296,7 @@ export default function AboutPage() {
             WHO IT'S FOR
           </p>
           <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            zemit은 누구를 위한 공간인가요?
+            zemix는 누구를 위한 공간인가요?
           </h2>
         </div>
 
@@ -518,7 +347,7 @@ export default function AboutPage() {
             HOW IT WORKS
           </p>
           <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            zemit을 시작하는 간단한 5단계
+            zemix를 시작하는 간단한 5단계
           </h2>
         </div>
 
@@ -581,6 +410,167 @@ export default function AboutPage() {
               className="mt-3 rounded-control bg-primary px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-primary-hover"
             >
               새 프로젝트 등록하기 →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* DEVELOPER INTRO SECTION (SEO & PROFILE) */}
+      <section className="mx-auto max-w-5xl px-6 pt-24">
+        <div className="rounded-[20px] border border-border bg-surface p-8 sm:p-12 shadow-card">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/60 pb-6 mb-8">
+            <div>
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft text-primary px-3 py-1 text-xs font-bold mb-2">
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>Founder & Maker</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+                메이커 장현 (Jang Hyun)
+              </h2>
+              <p className="text-xs sm:text-sm text-muted mt-1">
+                아이디어를 실제 제품으로 빠르게 빌드하는 풀스택 메이커 & 개발자
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="rounded-full border border-border bg-surface-muted px-3 py-1 text-xs font-semibold text-foreground">
+                🚀 Creator of zemix
+              </span>
+            </div>
+          </div>
+
+          {/* Intro Story */}
+          <div className="space-y-4 text-sm leading-relaxed text-foreground/90 mb-10">
+            <p>
+              안녕하세요, <strong>아이디어를 실제 제품으로 빠르게 빌드하는 메이커 장현</strong>입니다. 🚀
+            </p>
+            <p className="text-muted leading-relaxed">
+              사용자에게 실질적인 가치를 주는 서비스를 만드는 것을 좋아하며, 기획부터 개발, 배포까지 전 과정을 직접 다루고 있습니다. 평소에 아이디어가 떠오르면 직접 코딩하고 배포하여 세상에 내놓는 과정을 진심으로 즐깁니다.
+            </p>
+            <p className="text-muted leading-relaxed">
+              학생들을 위한 스마트 스쿨 라이프 어시스턴트 <strong>SchoolEcho</strong>부터 개발자/크리에이터 협업 플랫폼 <strong>Buildit</strong>, 그리고 사이드 프로젝트 메이커 플랫폼 <strong>zemix</strong>까지 다양한 서비스를 직접 기획하고 빌드해 왔습니다. 웹 개발(Vercel, Supabase 등)뿐만 아니라 Google AI Studio, Gemini API를 활용한 AI 접목, 나아가 아두이노 기반 자율주행 로봇(WCRC 경진대회 대상 수상)처럼 소프트웨어와 하드웨어를 넘나드는 메이킹 활동을 이어가고 있습니다.
+            </p>
+          </div>
+
+          {/* Tech Stack & Tools Grid */}
+          <div className="mb-10">
+            <h3 className="text-sm font-bold text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
+              <Terminal className="h-4 w-4 text-primary" />
+              <span>🛠 Tech Stack & Tools</span>
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="rounded-[14px] border border-border bg-surface-muted/40 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Code className="h-4 w-4 text-primary shrink-0" />
+                  <h4 className="text-xs font-bold text-foreground">Frontend / Web</h4>
+                </div>
+                <p className="text-xs text-muted leading-relaxed">
+                  Vercel, Netlify, HTML/CSS/JS, React, Next.js 등 최신 웹 생태계 기반 초고속 서비스 구축 및 최적화
+                </p>
+              </div>
+
+              <div className="rounded-[14px] border border-border bg-surface-muted/40 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Bot className="h-4 w-4 text-info shrink-0" />
+                  <h4 className="text-xs font-bold text-foreground">AI Integration</h4>
+                </div>
+                <p className="text-xs text-muted leading-relaxed">
+                  Google AI Studio, Gemini API를 활용한 지능형 AI 서비스 및 자동화 파이프라인 구현 (Ultron WASM 등)
+                </p>
+              </div>
+
+              <div className="rounded-[14px] border border-border bg-surface-muted/40 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Database className="h-4 w-4 text-success shrink-0" />
+                  <h4 className="text-xs font-bold text-foreground">Backend & DB</h4>
+                </div>
+                <p className="text-xs text-muted leading-relaxed">
+                  Supabase (PostgreSQL), Edge Functions, RLS 보안 정책, Git/GitHub 및 GitHub Copilot 협업
+                </p>
+              </div>
+
+              <div className="rounded-[14px] border border-border bg-surface-muted/40 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Cpu className="h-4 w-4 text-warning shrink-0" />
+                  <h4 className="text-xs font-bold text-foreground">Hardware / IoT</h4>
+                </div>
+                <p className="text-xs text-muted leading-relaxed">
+                  아두이노(Arduino) 기반 센서 제어, 자율주행 물류 로봇 시스템 설계 및 펌웨어 프로그래밍
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Projects & Activities Grid */}
+          <div className="mb-8">
+            <h3 className="text-sm font-bold text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
+              <Layers className="h-4 w-4 text-primary" />
+              <span>💡 Projects & Activities</span>
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="rounded-[14px] border border-primary/30 bg-primary-soft/10 p-4">
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <span>zemix</span>
+                    <span className="rounded-full bg-primary text-white text-[9px] px-1.5 py-0.2">Live</span>
+                  </h4>
+                  <Link href="/" className="text-primary text-[11px] font-semibold hover:underline">
+                    둘러보기 →
+                  </Link>
+                </div>
+                <p className="text-xs text-muted leading-relaxed mt-1">
+                  사이드 프로젝트 메이커들을 위한 런칭, 피드백 수집, 동료 매칭 올인원 커뮤니티 플랫폼
+                </p>
+              </div>
+
+              <div className="rounded-[14px] border border-border bg-surface-muted/40 p-4">
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="text-xs font-bold text-foreground">Buildit</h4>
+                  <span className="text-[10px] text-muted">Platform</span>
+                </div>
+                <p className="text-xs text-muted leading-relaxed mt-1">
+                  개발자와 크리에이터들을 위한 프로젝트 공유 및 인터랙티브 협업 플랫폼 구축
+                </p>
+              </div>
+
+              <div className="rounded-[14px] border border-border bg-surface-muted/40 p-4">
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="text-xs font-bold text-foreground">SchoolEcho</h4>
+                  <span className="text-[10px] text-muted">Assistant</span>
+                </div>
+                <p className="text-xs text-muted leading-relaxed mt-1">
+                  학생들을 위한 급식, 시간표, 커뮤니티를 한곳에 담은 스마트 스쿨 라이프 어시스턴트 서비스
+                </p>
+              </div>
+
+              <div className="rounded-[14px] border border-warning/30 bg-warning-soft/20 p-4">
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="text-xs font-bold text-warning flex items-center gap-1">
+                    <Award className="h-4 w-4" />
+                    <span>WCRC 물류로봇대회 대상 (1위)</span>
+                  </h4>
+                  <span className="rounded-full bg-warning/20 text-warning text-[9px] font-bold px-1.5 py-0.5">2026</span>
+                </div>
+                <p className="text-xs text-foreground/80 leading-relaxed mt-1">
+                  2026년 제2회 월드 물류 로봇 딜리버리 학생 경진대회 중등부 대상(1위) 수상 (아두이노 기반 자율주행 물류 시스템)
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Message */}
+          <div className="rounded-[12px] bg-surface-muted p-4 text-xs text-muted leading-relaxed flex items-center justify-between flex-wrap gap-3">
+            <span>
+              언제나 새로운 기술을 탐구하고 재미있는 서비스를 만들어가는 것에 열려 있습니다. 재미있는 프로젝트를 함께 이야기하거나 피드백을 나누는 걸 좋아합니다. 언제든 편하게 소통해 주세요! ✨
+            </span>
+            <Link
+              href="/builders"
+              className="text-primary font-semibold hover:underline shrink-0"
+            >
+              빌더 라운지에서 소통하기 →
             </Link>
           </div>
         </div>

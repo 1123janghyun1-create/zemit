@@ -122,7 +122,7 @@
   }
 }
 
-/* Custom Zemit Utilities */
+/* Custom Zemix Utilities */
 .bg-primary {
   background-color: var(--primary) !important;
   color: var(--primary-foreground) !important;
@@ -195,6 +195,11 @@
 
 .text-danger {
   color: var(--danger);
+}
+
+.fill-danger,
+.fill-rose {
+  fill: var(--danger) !important;
 }
 
 .border-border {

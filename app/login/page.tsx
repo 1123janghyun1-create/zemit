@@ -63,11 +63,11 @@ function LoginForm() {
             <HexagonLogo className="h-5 w-5 text-foreground group-hover:text-primary transition-colors" strokeWidth={2.2} />
           </span>
           <span className="text-xl font-bold tracking-tight text-foreground">
-            zemit
+            zemix
           </span>
         </Link>
         <h2 className="text-2xl font-bold tracking-tight text-foreground">
-          zemit 시작하기
+          zemix 시작하기
         </h2>
         <p className="text-xs text-muted leading-relaxed">
           구글 계정으로 간편하게 로그인하고 사이드 프로젝트를 공유해보세요.
@@ -133,7 +133,7 @@ function LoginForm() {
       {/* Footer Info */}
       <div className="pt-4 border-t border-border space-y-4 text-center">
         <p className="text-[11px] text-muted leading-relaxed">
-          로그인 시 zemit의{" "}
+          로그인 시 zemix의{" "}
           <Link href="/terms" className="underline hover:text-foreground">
             서비스 이용약관
           </Link>{" "}

@@ -25,7 +25,7 @@ export default function MobileHeader() {
           <HexagonLogo className="h-4 w-4 text-foreground" strokeWidth={2.2} />
         </span>
         <span className="text-[15px] font-bold tracking-tight text-foreground">
-          zemit
+          zemix
         </span>
       </Link>
 
@@ -78,9 +78,11 @@ export default function MobileHeader() {
           type="button"
           onClick={toggleLanguage}
           aria-label="Switch language"
-          className="flex h-8 items-center justify-center rounded-[12px] px-2 text-xs font-semibold text-muted hover:text-foreground cursor-pointer"
+          className="flex h-7 items-center rounded-lg border border-border bg-surface px-1.5 text-[11px] font-semibold text-muted hover:text-foreground cursor-pointer"
         >
-          {!mounted ? "한국어" : language === "ko" ? "한국어" : "EN"}
+          <span className={language === "ko" ? "text-primary font-bold" : "text-muted"}>KO</span>
+          <span className="mx-0.5 text-border-strong text-[9px]">/</span>
+          <span className={language === "en" ? "text-primary font-bold" : "text-muted"}>EN</span>
         </button>
 
         {/* Profile / Login */}
